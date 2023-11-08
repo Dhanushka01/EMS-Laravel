@@ -1,0 +1,416 @@
+<?php
+
+namespace App\Http\Controllers\Employee\Register;
+
+use App\Http\Controllers\Controller;
+
+use Illuminate\Http\Request;
+
+use App\Models\Employee\Personal\Mnrce_admin_emp_personal;
+use App\Models\Employee\Epf\Mnrce_admin_emp_epf;
+use App\Models\Employee\Contact\Mnrce_admin_emp_contact;
+use App\Models\Employee\Emergency\Mnrce_admin_emp_emer_contact;
+use App\Models\Employee\Edu_profitional\Mnrce_admin_emp_acd_profi;
+use App\Models\Employee\Certificate\Mnrce_admin_emp_certificate;
+use App\Models\Employee\Edu_basic\Mnrce_admin_emp_acd_basic;
+use App\Models\Employee\Edu_hire\Mnrce_admin_emp_acd_high;
+use App\Models\Employee\Past_emp\Mnrce_admin_emp_work_exper;
+use App\Models\Employee\Edu_Local\Mnrce_admin_emp_acd_ol;
+
+class MnrceAdminEmpPersonalController extends Controller{
+	
+   public function index(Request $req) {
+		if(session('uname') && session('Status')=='A'){
+	   		return view('employee.register.empreg');	
+	   	}
+	   	else{
+
+	   		return redirect('/');
+    	}
+	}
+#========================================================================================#    
+	function checkEpf($epf) {
+		$emp1= Mnrce_admin_emp_epf::where('epf_no', $epf)
+         		   					->count();
+         		   						
+      if($emp1>0) {
+			return false;      
+      }
+      else {
+			return true;      
+      }   		   
+	}
+#========================================================================================#   
+	
+    function register_new_employee(Request $req){
+    	$user=session('user');
+    	$ct=time();
+    	
+		//dd($req->all());
+		$data=$req->input();
+		$epf=$data['epf'];
+		
+		$checkEpf =$this->checkEpf($epf);
+		
+		if($checkEpf) {
+			
+			$pen1=$data['dob'];
+			$pen2=date('Y-m-d', strtotime($pen1. ' + 60 year'));
+			$pen3=date('Y-m-d', strtotime($pen2. ' - 1 days'));
+			
+			$Personal = new Mnrce_admin_emp_personal;
+			
+			$Personal->fullname=$data['fname'];
+			$Personal->nameini=$data['Iname'];
+			$Personal->nic=$data['nid'];
+			$Personal->passport=$data['pass'];
+			$Personal->dlicence=$data['dl'];
+			$Personal->dob=$data['dob'];
+			$Personal->gender=$data['gender'];
+			$Personal->cstatus=$data['maried'];
+			$Personal->remarks=$data['remarks'];
+			$Personal->crby=$user;
+			$Personal->luby=$user;
+			$Personal->save();
+			
+			$emp_id=$Personal->id;
+//-----------------------------------------------------------------------------------------------------
+
+			$Epf = new Mnrce_admin_emp_epf;
+			
+			$Epf->epf_no=$data['epf'];
+			$Epf->emp_id=$emp_id;
+			$Epf->appoint_date=$data['textarea'];
+			$Epf->pen_date=$pen3;
+			$Epf->crby=$user;
+			$Epf->luby=$user;
+			$Epf->save();
+			
+			$epf_id=$Epf->id;
+//-----------------------------------------------------------------------------------------------------			
+			$Contact = new Mnrce_admin_emp_contact;
+			
+			$Contact->epf_id=$epf_id;
+			$Contact->add1=$data['pa'];
+			$Contact->add2=$data['gn'];
+			$Contact->add3=$data['ds'];
+			$Contact->tempadd=$data['temadd'];
+			$Contact->grama=$data['gn'];
+			$Contact->divisiona=$data['pd'];
+			$Contact->districk=$data['a6'];
+			$Contact->province=$data['a7'];
+			$Contact->mobile1=$data['phone'];
+			$Contact->mobile2=$data['phone2'];
+			$Contact->homephone=$data['tel'];
+			$Contact->email=$data['email'];
+			$Contact->crby=$user;
+			$Contact->luby=$user;
+			$Contact->save();		
+
+//-----------------------------------------------------------------------------------------------------		
+			
+			$Emer = new Mnrce_admin_emp_emer_contact;
+			
+			$Emer->epf_id=$epf_id;
+			$Emer->conname=$data['ename'];
+			$Emer->conmobile=$data['etel'];
+			$Emer->conaddress=$data['eadd'];
+			$Emer->crby=$user;
+			$Emer->luby=$user;
+			$Emer->save();
+			
+			$Emer = new Mnrce_admin_emp_emer_contact;
+			
+			$Emer->epf_id=$epf_id;
+			$Emer->conname=$data['ename2'];
+			$Emer->conmobile=$data['etel2'];
+			$Emer->conaddress=$data['eadd2'];
+			$Emer->crby=$user;
+			$Emer->luby=$user;
+			$Emer->save();		
+
+//-----------------------------------------------------------------------------------------------------		
+			
+			$course=$data['pct_'];
+			$ins=$data['pins_'];
+			$year=$data['pyear_'];
+			$year2=$data['eyear_'];
+			
+			foreach($course as $key => $value){
+				
+				if($value=='') {
+					continue;				
+				}	
+				
+				$Profi = new Mnrce_admin_emp_acd_profi;
+				
+				$Profi->epf_id=$epf_id;
+				$Profi->title=$value;
+				$Profi->institute=$ins[$key];
+				$Profi->pfrom=$year[$key];
+				$Profi->pto=$year2[$key];
+				$Profi->crby=$user;
+				$Profi->luby=$user;
+				$Profi->save();				
+			}
+			
+//-----------------------------------------------------------------------------------------------------	
+			
+			if(isset($data['d_'])) {
+				$cer=$data['d_'];
+				//$ce=$data['dn_'];
+				$date=date('Y-m-d');
+				$x=0;
+				foreach($cer as $key => $value){
+					$x++;	
+					if($value=='') {
+						continue;				
+					}
+					switch ($value) {
+					  case "1":
+					    $dn='Police';
+					    break;
+					  case "2":
+					    $dn='GS';
+					    break;			    
+					  case "3":
+					    $dn='Birth';
+					    break;
+					  case "4":
+					    $dn='GCE_O/L';
+					    break;		
+					  case "5":
+					    $dn='GCE_A/L';
+					    break;	
+					  case "6":
+					    $dn='NIC_Copy';
+					    break;					        	    
+					  case "7":
+					    $dn='EPF_B_Card';
+					    break;					    
+					  case "8":
+					    $dn='Driving_License';
+					    break;					    
+					  case "9":
+					    $dn='Passport';
+					    break;					    
+					  case "10":
+					    $dn='Diploma';
+					    break;	
+					  case "11":
+					    $dn='Higher_Diploma';
+					    break;					    
+					  case "12":
+					    $dn='Degree';
+					    break;					    
+					  case "13":
+					    $dn='MSC';
+					    break;
+					  case "14":
+					    $dn='PHD';
+					    break;
+					  case "15":
+					    $dn='Service_Letters';
+					    break;					    					    					    				    
+					    }		
+					    			    					    					    					
+					$Cert = new Mnrce_admin_emp_certificate;
+					
+					$Cert->epf_id=$epf_id;
+					$Cert->certaficate=$dn;
+					$Cert->cdate=$date;
+					$Cert->crby=$user;
+					$Cert->luby=$user;
+					$Cert->save();	
+						
+				}			
+			}
+
+//-----------------------------------------------------------------------------------------------------	
+	
+			$Edupri = new Mnrce_admin_emp_acd_basic;
+			
+			$Edupri->epf_id=$epf_id;
+			$Edupri->passgrade=$data['5st'];
+			$Edupri->crby=$user;
+			$Edupri->luby=$user;
+			$Edupri->save();	
+
+
+			if(isset($data['8st'])) {
+				
+				$Edupri = new Mnrce_admin_emp_acd_basic;
+				
+				$Edupri->epf_id=$epf_id;
+				$Edupri->passgrade=$data['8st'];
+				$Edupri->crby=$user;
+				$Edupri->luby=$user;
+				$Edupri->save();		
+			}		
+
+//-----------------------------------------------------------------------------------------------------
+			
+			if(isset($data['highered'])) {
+				
+				$Eduhire = new Mnrce_admin_emp_acd_high;
+				
+				$Eduhire->epf_id=$epf_id;
+				$Eduhire->type=$data['highered'];
+				$Eduhire->title=$data['ct'];
+				$Eduhire->institute=$data['ins1'];
+				$Eduhire->year=$data['year1'];
+				$Eduhire->crby=$user;
+				$Eduhire->luby=$user;
+				$Eduhire->save();		
+			}
+			
+			if(isset($data['highered2'])) {
+				
+				$Eduhire = new Mnrce_admin_emp_acd_high;
+				
+				$Eduhire->epf_id=$epf_id;
+				$Eduhire->type=$data['highered2'];
+				$Eduhire->title=$data['ct2'];
+				$Eduhire->institute=$data['ins2'];
+				$Eduhire->year=$data['year2'];
+				$Eduhire->crby=$user;
+				$Eduhire->luby=$user;
+				$Eduhire->save();		
+			}	
+			if(isset($data['highered3'])) {
+				
+				$Eduhire = new Mnrce_admin_emp_acd_high;
+				
+				$Eduhire->epf_id=$epf_id;
+				$Eduhire->type=$data['highered3'];
+				$Eduhire->title=$data['ct3'];
+				$Eduhire->institute=$data['ins3'];
+				$Eduhire->year=$data['year3'];
+				$Eduhire->crby=$user;
+				$Eduhire->luby=$user;
+				$Eduhire->save();		
+			}
+			if(isset($data['highered4'])) {
+				
+				$Eduhire = new Mnrce_admin_emp_acd_high;
+				
+				$Eduhire->epf_id=$epf_id;
+				$Eduhire->type=$data['highered4'];
+				$Eduhire->title=$data['ct4'];
+				$Eduhire->institute=$data['ins4'];
+				$Eduhire->year=$data['year4'];
+				$Eduhire->crby=$user;
+				$Eduhire->luby=$user;
+				$Eduhire->save();		
+			}	
+			if(isset($data['highered5'])) {
+				
+				$Eduhire = new Mnrce_admin_emp_acd_high;
+				
+				$Eduhire->epf_id=$epf_id;
+				$Eduhire->type=$data['highered5'];
+				$Eduhire->title=$data['ct5'];
+				$Eduhire->institute=$data['ins5'];
+				$Eduhire->year=$data['year5'];
+				$Eduhire->crby=$user;
+				$Eduhire->luby=$user;
+				$Eduhire->save();		
+			}			
+
+//-----------------------------------------------------------------------------------------------------	
+				
+			$post=$data['woep_'];
+			$ins=$data['woei_'];
+			$from=$data['woef_'];
+			$to=$data['woet_'];
+			
+			foreach($post as $key => $value){
+				
+				if($value=='') {
+					continue;				
+				}	
+				
+				$Profi = new Mnrce_admin_emp_work_exper;
+				
+				$Profi->epf_id=$epf_id;
+				$Profi->post=$value;
+				$Profi->institute=$ins[$key];
+				$Profi->wfrom=$from[$key];
+				$Profi->wto=$to[$key];
+				$Profi->crby=$user;
+				$Profi->luby=$user;
+				$Profi->save();				
+			}			
+
+//-----------------------------------------------------------------------------------------------------
+										
+			if(isset($data['index'])) {
+				$sub=$data['subo_'];
+				$grade=$data['gro_'];
+				
+				foreach($sub as $key => $value){
+					if($value=='') {
+						continue;				
+					}				
+					$Local = new Mnrce_admin_emp_acd_ol;
+					
+					$Local->epf_id=$epf_id;
+					$Local->type='GCE O/L';
+					$Local->eindex=$data['index'];
+					$Local->eyear=$data['year'];
+					$Local->subject=$sub[$key];
+					$Local->sgrade=$grade[$key];
+					$Local->crby=$user;
+					$Local->luby=$user;
+					$Local->save();	
+				
+				}			
+				
+			}
+	
+			if(isset($data['aindex'])) {
+	
+	
+				$sub=$data['suba_'];
+				$grade=$data['gra_'];
+				
+				foreach($sub as $key => $value){
+					if($value=='') {
+						continue;				
+					}
+					$Local = new Mnrce_admin_emp_acd_ol;
+					
+					$Local->epf_id=$epf_id;
+					$Local->type='GCE A/L';
+					$Local->eindex=$data['aindex'];
+					$Local->eyear=$data['ayear'];
+					$Local->subject=$sub[$key];
+					$Local->sgrade=$grade[$key];
+					$Local->crby=$user;
+					$Local->luby=$user;
+					$Local->save();	
+				
+				}			
+				
+			}	
+//-----------------------------------------------------------------------------------------------------			
+			
+			
+					
+			$req->session()->put('emp','Successfully Saved Employee Data!!!');
+			return back();
+	    }
+	    else {
+			$req->session()->put('noemp','EPF Number Already Exists !!!');
+			return back();
+	    }
+	}	
+	
+#========================================================================================#    	
+	
+	
+	
+	
+	
+#    
+}

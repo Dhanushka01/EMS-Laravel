@@ -1,0 +1,220 @@
+@include('navbar.leftbar')
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+
+
+@if(Session::has('insclaim'))
+	<script type="text/javascript" >
+		swal("Good Job !","{!! Session::pull('insclaim') !!}","success",{
+			button:"ok",					
+		});
+	</script>	
+	Session::forget('insclaim');		
+@endif	
+@if(Session::has('inscompE'))
+	<script type="text/javascript" >
+		swal("Error !","{!! Session::pull('inscompE') !!}","error",{
+			button:"ok",					
+		});
+	</script>	
+	Session::forget('inscompE');		
+@endif	
+
+
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
+
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-12">
+            <div class="card card-outline card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Insurance Claim Respond</h3>
+                <div style="float: right;">
+                	<a>
+							<button class="btn btn-primary" onclick="showinsertmodel()" >New Claim</button>   
+						</a>             
+                </div>               
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                <table id="example1" class="table table-bordered table-striped">
+                      <thead>
+                        <tr>
+                          <th>#</th>
+                          <th>EPF</th>
+                          <th>Request Date</th>
+                          <th>Insurance Type</th>
+                          <th>Complete Date</th>
+                          <th>Cheque number</th>
+                          <th>Amount</th>
+                          <th>Status</th>
+
+         
+
+						                           
+                        </tr>
+                      </thead>
+ 								<?php
+									$data1 = DB::table('ins_claims')
+														->join('ins_claimrequests','ins_claimrequests.id','=','ins_claims.rid')
+														->join('emppersonals','emppersonals.id','=','ins_claimrequests.epf_id')
+														->select('ins_claims.*','ins_claimrequests.*','emppersonals.EpfNo')														
+														->get();
+														
+									
+								?>                     
+								<tbody>
+									@foreach($data1 as $value)
+									<tr style="">
+										<td>{{$loop->iteration}}</td>
+										<td>{{$value->EpfNo}}</td>	
+										<td>{{$value->rdate}}</td>	
+										<td>{{$value->ins}}</td>											
+										<td>{{$value->cdate}}</td>				
+										<td>{{$value->cheque}}</td>				
+										<td>{{$value->amount}}</td>				
+										<td>
+											<?php
+
+												if($value->cstatus=='A') {
+													echo "<p class='bg-success rounded-pill' style='text-align: center;' >Accepted</p>";													
+												}
+												elseif($value->cstatus=='Z') {
+													echo "<p class='bg-secondary rounded-pill' style='text-align: center;' >Requested</p>";													
+												}
+												elseif($value->cstatus=='R') {
+													echo "<p class='bg-danger rounded-pill' style='text-align: center;' >Rejected</p>";													
+												}	
+																																					
+											?>
+										</td>																												
+									</tr>
+									
+									@endforeach								
+								</tbody>                      
+                </table>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+            
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div>
+      <!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+
+
+  <!-- /.control-sidebar -->
+</div>
+<!-- ./wrapper -->
+
+</body>
+</html>
+<!-- Insert Model -->
+<script type="text/javascript" >
+	function showinsertmodel() {
+		$('#modal-insert').modal('show');		
+	}
+</script>
+
+      <div class="modal fade" id="modal-insert">
+        <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="card card-primary">
+             <div class="card-header">
+                	<h3 class="card-title">Claim Received Form</h3>
+               	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+               		<span aria-hidden="true">&times;</span>
+              		</button>
+              </div>
+
+              <form id="demo-form2" action="/insclaim" method="post" data-parsley-validate class="form-horizontal form-label-left">
+               @csrf
+                <div class="card-body" style="display: ;">
+	                <div class="row">
+	                
+                    <div class="form-group col-md-12">
+                      <label for="epf">Select EPF No * :</label>
+                         <select id="epf" class="form-control epfselect select2" required name="epf" >
+                             <option value="">Select EPF No..</option>
+										<?php
+											$data = DB::table('ins_claimrequests')
+																->select('ins_claimrequests.id','ins_claimrequests.ins','emppersonals.EpfNo','ins_claimrequests.rdate','emppersonals.fullname')
+																->join('emppersonals','emppersonals.id','=','ins_claimrequests.epf_id')
+																->where('status','<>','A')
+																->orderBy('rdate', 'DESC')->get();
+											foreach($data as $key => $value){
+												echo "<option value='".$value->id."'>".$value->EpfNo." | ".$value->fullname.
+																			" | ".$value->ins." | ".$value->rdate."</option>";											
+											}
+										?>		                           
+                         </select>
+						 </div>
+
+	                  <div class="form-group col-md-6">
+                        <label>Date <span class="required">*</span>
+                        </label>
+								<input id="cdate" class="form-control" type="date" name="cdate" value="<?php echo date('Y-m-d'); ?>" >                   
+	                  </div>					 
+
+	                  <div class="form-group col-md-6">
+                        <label>Status <span class="required">*</span>
+                        </label>
+								<select class="form-control" name="csta" id="csta">
+									<option value="A">Accept</option>
+									<option value="R">Reject</option>
+								</select>                   
+	                  </div>	
+	 	              <div class="form-group col-md-6">
+                        <label>Cheque Number <span class="required">*</span>
+                        </label>
+								<input id="che" class="form-control" type="text" name="che" >                   
+	                  </div>
+	 	              <div class="form-group col-md-6">
+                        <label>Paid Amount <span class="required">*</span>
+                        </label>
+								<input id="amount" class="form-control" type="number" name="amount"  value="0" min="0" step="0.01">                   
+	                  </div>	                  	                                    		                                    
+	                  <div class="form-group col-md-12">
+                        <label>Remarks <span class="required">*</span>
+                        </label>
+								<textarea class="form-control" type="text" name="remark" ></textarea>                   
+	                  </div>	 	                  	                                   
+	                </div>
+                </div>              
+                
+                
+            <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <input type="submit" name="submit" class="btn btn-warning" value="Save" >
+            </div>
+            </form>  
+          </div>
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        </div>
+        <!-- /.modal-dialog -->
+
+

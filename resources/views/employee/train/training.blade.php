@@ -1,0 +1,107 @@
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>	
+	
+	@include('navbar.leftbar');
+	
+	@if(Session::has('empTrain'))
+		<script type="text/javascript" >
+			swal("Good Job !","{!! Session::pull('empTrain') !!}","success",{
+				button:"ok",					
+			});
+		</script>	
+		Session::forget('empTrain');		
+	@endif
+	
+	@if(Session::has('dupuser'))
+		<script type="text/javascript" >
+			swal("Try Again !!!","{!! Session::pull('dupuser') !!}","error",{
+				button:"ok",					
+			});
+		</script>	
+		Session::forget('dupuser');		
+	@endif	
+
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+  <div class="content-wrapper">
+
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+
+          <div class="col-md-12">
+
+            <div class="card card-outline card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Employee Training <small></small></h3>
+              </div>
+
+               <form id="demo-form2" action="employee-train-new" method="post" data-parsley-validate class="form-horizontal form-label-left">
+               @csrf
+                <div class="card-body">
+						<div class="row">
+	                <div class="form-group col-md-3">
+                      <label for="epf">Start Date <span style="color: red;"> * </span> </label>
+                      <input type="date" id="" class="form-control" name="sdate" required />
+						 </div>		
+	                <div class="form-group col-md-3">
+                      <label for="epf">End Date <span style="color: red;"> * </span> </label>
+                      <input type="date" id="" class="form-control" name="edate" required />
+						 </div>		
+	                <div class="form-group col-md-12">
+                      <label for="epf">Training Title <span style="color: red;"> * </span> </label>
+                      <input type="text" id="" class="form-control" name="title" required />
+						 </div>		
+	                <div class="form-group col-md-6">
+                      <label for="epf">Location <span style="color: red;"> * </span> </label>
+                      <input type="text" id="" class="form-control" name="locat" required />
+						 </div>		
+	                <div class="form-group col-md-6">
+                      <label for="epf">Training Conductor <span style="color: red;"> * </span> </label>
+                      <input type="text" id="" class="form-control" name="cond" required />
+						 </div>							 				 				 				 			
+                <div class="form-group col-md-12">
+                  <label for="epf">Participants <span style="color: red;"> * </span> </label>
+                  <select class="select2" multiple="multiple" data-placeholder="Select a Employees" style="width: 100%;" required name="epf_[]">
+									<?php
+										$data = DB::table('mnrce_admin_emp_epfs')
+																->where('resignDate',null)
+																->join('mnrce_admin_emp_personals','mnrce_admin_emp_personals.id','mnrce_admin_emp_epfs.emp_id')
+																->orderBy('mnrce_admin_emp_epfs.epf_no', 'ASC')
+																->select('mnrce_admin_emp_epfs.*','mnrce_admin_emp_personals.nameini')
+																->get();
+										foreach($data as $key => $value){
+											echo "<option value='".$value->id."'>".$value->epf_no." | ".$value->nameini."</option>";											
+										}
+									?>	
+                  </select>
+                </div>	               
+                    
+							             					
+						</div>
+							
+                </div>
+
+
+                <div class="card-footer">
+                	<div class="float-right">
+                 	 <button type="reset" class="btn btn-warning">Reset</button>
+                 	 <button type="submit" class="btn btn-success">Submit</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+
+
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+  </div>
+
+</div>
+
+
+</body>

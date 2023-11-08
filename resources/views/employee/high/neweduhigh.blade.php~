@@ -1,0 +1,273 @@
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>	
+	
+	@include('navbar.leftbar');
+	
+	@if(Session::has('empHigh'))
+		<script type="text/javascript" >
+			swal("Good Job !","{!! Session::pull('empHigh') !!}","success",{
+				button:"ok",					
+			});
+		</script>	
+		Session::forget('empHigh');		
+	@endif
+	
+	@if(Session::has('dupuser'))
+		<script type="text/javascript" >
+			swal("Try Again !!!","{!! Session::pull('dupuser') !!}","error",{
+				button:"ok",					
+			});
+		</script>	
+		Session::forget('dupuser');		
+	@endif	
+
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+  <div class="content-wrapper">
+
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+
+          <div class="col-md-12">
+
+            <div class="card card-outline card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Higher Education Form <small>Employee Data </small></h3>
+              </div>
+
+               <form id="demo-form2" action="employee-acd-higher-new" method="post" data-parsley-validate class="form-horizontal form-label-left">
+               @csrf
+                <div class="card-body">
+                	<div class="row">
+	                  <div class="form-group">
+	                    <label for="desig">Select Epf Number</label>
+	                   <select id="epf" class="form-control epfselect select2" required name="epf">
+	                       <option value="">Select EPF No..</option>
+									<?php
+										$data = DB::table('mnrce_admin_emp_epfs')
+																->where('resignDate',null)
+																->join('mnrce_admin_emp_personals','mnrce_admin_emp_personals.id','mnrce_admin_emp_epfs.emp_id')
+																->orderBy('mnrce_admin_emp_epfs.epf_no', 'ASC')
+																->get();
+										foreach($data as $key => $value){
+											echo "<option value='".$value->id."'>".$value->epf_no." | ".$value->fullname."</option>";											
+										}
+									?>		                           
+	                   </select>
+	                  </div>
+                  </div>
+	<div class="row">
+                          <div class="col-md-2 col-sm-2 col-xs-12">
+                          <label>Select</label>
+                          <select class="form-control" name="highered" required>
+                          <option value="">Select</option>
+                           
+                            <option value="Master_Degree">Masters Degree</option>
+                            <option value="Degree">Degree</option>
+                            <option value="HND">HND</option>
+                            <option value="Diploma">Diploma</option>
+                            <option value="Certificate">Certificate</option>
+                            <option value="NVQ_1">NVQ Level-1</option>
+                            <option value="NVQ_2">NVQ Level-2</option>
+                            <option value="NVQ_3">NVQ Level-3</option>
+                            <option value="NVQ_4">NVQ Level-4</option>
+                            <option value="NVQ_5">NVQ Level-5</option>
+                            <option value="NVQ_6">NVQ Level-6</option>
+                            <option value="NVQ_7">NVQ Level-7</option>
+                            
+                            
+                          </select>
+                        </div>
+                        
+                          <div class="col-md-4 col-sm-4 col-xs-12">
+                          <center><label>Course Title</label></center>
+                          <input id="result1" class="form-control "  name="ct" placeholder="" required type="text">
+                        </div>    
+                        
+                        <div class="col-md-4 col-sm-4 col-xs-12">
+                          <center><label>Institute Name</label></center>
+                          <input id="result1" class="form-control "  name="ins1" placeholder="" required type="text">
+                        </div>    
+                        
+                        <div class="col-md-2 col-sm-2 col-xs-12">
+                          <center><label>Year</label></center>
+                          <input id="result1" class="form-control "  name="year1" placeholder="" required type="number">
+                        </div>     
+
+                         <div class="col-md-2 col-sm-2 col-xs-12">
+                          <label>Select</label>
+                          <select class="form-control" name="highered2">
+                          <option value="">Select</option>
+                           
+                            <option value="Master_Degree">Masters Degree</option>
+                            <option value="Degree">Degree</option>
+                            <option value="HND">HND</option>
+                            <option value="Diploma">Diploma</option>
+                            <option value="Certificate">Certificate</option>
+                            <option value="NVQ_1">NVQ Level-1</option>
+                            <option value="NVQ_2">NVQ Level-2</option>
+                            <option value="NVQ_3">NVQ Level-3</option>
+                            <option value="NVQ_4">NVQ Level-4</option>
+                            <option value="NVQ_5">NVQ Level-5</option>
+                            <option value="NVQ_6">NVQ Level-6</option>
+                            <option value="NVQ_7">NVQ Level-7</option>
+                            
+                            
+                          </select>
+                        </div>
+                        
+                          <div class="col-md-4 col-sm-4 col-xs-12">
+                          <center><label>Course Title</label></center>
+                          <input id="result1" class="form-control "  name="ct2" placeholder=""  type="text">
+                        </div>    
+                        
+                        <div class="col-md-4 col-sm-4 col-xs-12">
+                          <center><label>Institute Name</label></center>
+                          <input id="result1" class="form-control "  name="ins2" placeholder=""  type="text">
+                        </div>    
+                        
+                        <div class="col-md-2 col-sm-2 col-xs-12">
+                          <center><label>Year</label></center>
+                          <input id="result1" class="form-control "  name="year2" placeholder=""  type="number">
+                        </div>  
+ 
+                          <div class="col-md-2 col-sm-2 col-xs-12">
+                          <label>Select</label>
+                          <select class="form-control" name="highered3">
+                          <option value="">Select</option>
+                           
+                            <option value="Master_Degree">Masters Degree</option>
+                            <option value="Degree">Degree</option>
+                            <option value="HND">HND</option>
+                            <option value="Diploma">Diploma</option>
+                            <option value="Certificate">Certificate</option>
+                            <option value="NVQ_1">NVQ Level-1</option>
+                            <option value="NVQ_2">NVQ Level-2</option>
+                            <option value="NVQ_3">NVQ Level-3</option>
+                            <option value="NVQ_4">NVQ Level-4</option>
+                            <option value="NVQ_5">NVQ Level-5</option>
+                            <option value="NVQ_6">NVQ Level-6</option>
+                            <option value="NVQ_7">NVQ Level-7</option>
+                            
+                            
+                          </select>
+                        </div>
+                        
+                          <div class="col-md-4 col-sm-4 col-xs-12">
+                          <center><label>Course Title</label></center>
+                          <input id="result1" class="form-control "  name="ct3" placeholder=""  type="text">
+                        </div>    
+                        
+                        <div class="col-md-4 col-sm-4 col-xs-12">
+                          <center><label>Institute Name</label></center>
+                          <input id="result1" class="form-control "  name="ins3" placeholder=""  type="text">
+                        </div>    
+                        
+                        <div class="col-md-2 col-sm-2 col-xs-12">
+                          <center><label>Year</label></center>
+                          <input id="result1" class="form-control "  name="year3" placeholder=""  type="number">
+                        </div>                      	
+                         <div class="col-md-2 col-sm-2 col-xs-12">
+                          <label>Select</label>
+                          <select class="form-control" name="highered4">
+                          <option value="">Select</option>
+                           
+                            <option value="Master_Degree">Masters Degree</option>
+                            <option value="Degree">Degree</option>
+                            <option value="HND">HND</option>
+                            <option value="Diploma">Diploma</option>
+                            <option value="Certificate">Certificate</option>
+                            <option value="NVQ_1">NVQ Level-1</option>
+                            <option value="NVQ_2">NVQ Level-2</option>
+                            <option value="NVQ_3">NVQ Level-3</option>
+                            <option value="NVQ_4">NVQ Level-4</option>
+                            <option value="NVQ_5">NVQ Level-5</option>
+                            <option value="NVQ_6">NVQ Level-6</option>
+                            <option value="NVQ_7">NVQ Level-7</option>
+                            
+                            
+                          </select>
+                        </div>
+                        
+                          <div class="col-md-4 col-sm-4 col-xs-12">
+                          <center><label>Course Title</label></center>
+                          <input id="result1" class="form-control "  name="ct4" placeholder=""  type="text">
+                        </div>    
+                        
+                        <div class="col-md-4 col-sm-4 col-xs-12">
+                          <center><label>Institute Name</label></center>
+                          <input id="result1" class="form-control "  name="ins4" placeholder=""  type="text">
+                        </div>    
+                        
+                        <div class="col-md-2 col-sm-2 col-xs-12">
+                          <center><label>Year</label></center>
+                          <input id="result1" class="form-control "  name="year4" placeholder=""  type="number">
+                        </div> 	
+                        
+                         <div class="col-md-2 col-sm-2 col-xs-12">
+                          <label>Select</label>
+                          <select class="form-control" name="highered5">
+                          <option value="">Select</option>
+                           
+                            <option value="Master_Degree">Masters Degree</option>
+                            <option value="Degree">Degree</option>
+                            <option value="HND">HND</option>
+                            <option value="Diploma">Diploma</option>
+                            <option value="Certificate">Certificate</option>
+                            <option value="NVQ_1">NVQ Level-1</option>
+                            <option value="NVQ_2">NVQ Level-2</option>
+                            <option value="NVQ_3">NVQ Level-3</option>
+                            <option value="NVQ_4">NVQ Level-4</option>
+                            <option value="NVQ_5">NVQ Level-5</option>
+                            <option value="NVQ_6">NVQ Level-6</option>
+                            <option value="NVQ_7">NVQ Level-7</option>
+                            
+                            
+                          </select>
+                        </div>
+                        
+                          <div class="col-md-4 col-sm-4 col-xs-12">
+                          <center><label>Course Title</label></center>
+                          <input id="result1" class="form-control "  name="ct5" placeholder=""  type="text">
+                        </div>    
+                        
+                        <div class="col-md-4 col-sm-4 col-xs-12">
+                          <center><label>Institute Name</label></center>
+                          <input id="result1" class="form-control "  name="ins5" placeholder=""  type="text">
+                        </div>    
+                        
+                        <div class="col-md-2 col-sm-2 col-xs-12">
+                          <center><label>Year</label></center>
+                          <input id="result1" class="form-control "  name="year5" placeholder=""  type="number">
+                        </div>
+	  									
+	
+	</div> 	                  
+                  
+						
+                </div>
+
+
+                <div class="card-footer">
+                	<div class="float-right">
+                 	 <button type="reset" class="btn btn-warning">Reset</button>
+                 	 <button type="submit" class="btn btn-success">Submit</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+
+
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+  </div>
+
+</div>
+
+
+</body>

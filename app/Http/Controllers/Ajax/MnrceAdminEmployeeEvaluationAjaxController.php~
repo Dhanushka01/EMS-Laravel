@@ -1,0 +1,19 @@
+<?php
+
+namespace App\Http\Controllers\Ajax;
+
+use App\Http\Controllers\Controller;
+
+use Illuminate\Http\Request;
+
+use App\Models\Employee\Evaluation\Mnrce_admin_emp_evaluation;
+
+class MnrceAdminEmployeeEvaluationAjaxController extends Controller{
+  
+  public function get_employee_evaluation_data_by_id(Request $req) {
+		
+		  
+  }
+
+#
+}

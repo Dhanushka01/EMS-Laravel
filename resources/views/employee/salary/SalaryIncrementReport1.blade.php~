@@ -1,0 +1,155 @@
+@include('navbar.leftbar')
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+
+	@if(Session::has('empsalinc'))
+		<script type="text/javascript" >
+			swal("Good Job !","{!! Session::pull('empsalinc') !!}","success",{
+				button:"ok",					
+			});
+		</script>	
+		Session::forget('empsalinc');		
+	@endif
+	
+	@if(Session::has('dupuser'))
+		<script type="text/javascript" >
+			swal("Try Again !!!","{!! Session::pull('dupuser') !!}","error",{
+				button:"ok",					
+			});
+		</script>	
+		Session::forget('dupuser');		
+	@endif
+
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
+
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-12">
+            <div class="card card-outline card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Salary Increment</h3>
+                <div style="float: right;">
+                	<a>
+						<!--	<button class="btn btn-primary" onclick="showinsertmodel()" >New</button>   -->
+						</a>             
+                </div>               
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                <table id="example1" class="table table-bordered table-striped">
+                      <thead>
+                        <tr>
+                          <th>#</th>
+                          <th>Epf</th>
+                          <th>Name</th>
+                          <th>Designation</th>
+                          <th>Salary Code </th>
+                          <th>Basic </th>
+                          <th>Earned </th>
+                          <th>Basic with Increment </th>
+                          <th>Amount of increments </th>
+                          <th>Next Increment </th>
+
+
+
+         
+
+						                           
+                        </tr>
+                      </thead>
+ 								<?php
+									$data1 = DB::table('salaryincs')
+														->where('salaryincs.incStatus','0')
+														->join('emppersonals','emppersonals.id','=','salaryincs.epf_id')
+														->join('edesignations','edesignations.epf_id','=','emppersonals.id')
+														->join('asy_designations','asy_designations.id','=','edesignations.empDesig')
+														->join('salarycos','salarycos.id','=','edesignations.empSalCode')
+														->orderBy('created_at','DESC')
+														->select('salaryincs.*','emppersonals.nameini','asy_designations.name',
+																	'salarycos.salcode','salarycos.bsal','salaryincs.incCount')														
+														->get();
+														
+								?>                     
+								<tbody>
+									@foreach($data1 as $value)
+										<?php
+											$data2= DB::table('salaryincs')
+														->where('epf_id',$value->epf_id)
+														->where('post','N')
+														->SUM('inc');
+														
+											$bsal=$value->bsal+$data2;	
+											
+											$data3= DB::table('salaryincs')
+														->where('epf_id',$value->epf_id)
+														->orderBy('id','DESC')
+														->limit(1)
+														->select('nxtdate')
+														->get();	
+														foreach($data3 as $key=>$value1){
+															$nxt=$value1->nxtdate;							
+														}								
+										?>
+									<tr style="">
+										<td>{{$loop->iteration}}</td>
+										<td>{{$value->epf}}</td>														
+										<td>{{$value->nameini}}</td>														
+										<td>{{$value->name}}</td>														
+										<td>{{$value->salcode}}</td>														
+										<td>{{number_format($value->bsal,2)}}</td>														
+										<td>{{number_format($data2,2)}}</td>														
+										<td>{{number_format($bsal,2)}}</td>																																																						
+										<td>{{$value->incCount}}</td>														
+										<td>{{$nxt}}</td>														
+													
+													
+														
+													
+									</tr>
+									
+									@endforeach								
+								</tbody>                      
+                </table>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+            
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div>
+      <!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+
+
+  <!-- /.control-sidebar -->
+</div>
+<!-- ./wrapper -->
+
+</body>
+</html>
+
+    
+     
+
+

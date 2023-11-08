@@ -1,0 +1,131 @@
+<div class="card-body">
+
+								<div class="row bg-secondary color-palette">
+									<span class="section"></span>
+									<h4>Identification Documents</h4>
+									</div>
+								<div class="row">	
+                          <div class="checkbox col-md-3">
+                            <label>
+                              <input type="checkbox" class="flat" name="d_[]" value="3"> <b>Birth Certificate</b>
+                              <input type="hidden" name="dn_[]" value="Birth" />
+                            </label>
+                         </div>									
+                          <div class="checkbox col-md-3" >
+                            <label>
+                              <input type="checkbox" class="flat" name="d_[]" value="6"> <b>NIC Copy</b>
+                              <input type="hidden" name="dn_[]" value="NIC_Copy" />
+                            </label>
+                          </div>
+                              <div class="checkbox col-md-3" >
+                            <label>
+                              <input type="checkbox" class="flat" name="d_[]" value="8"> <b>Driving License</b>
+                              <input type="hidden" name="dn_[]" value="Driving_License" />
+                            </label>
+                          </div>  
+                              <div class="checkbox col-md-3" >
+                            <label>
+                              <input type="checkbox" class="flat" name="d_[]" value="9"> <b>Passport</b>
+                              <input type="hidden" name="dn_[]" value="Passport" />
+                            </label>
+                          </div>                          						
+								</div>	
+								
+					<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->			
+									<div class="row">
+										<span class="section"></span>	
+										<h4>Academic Documents</h4>
+									</div>
+									<div class="row">			
+                           <div class="checkbox col-md-3">
+                            <label>
+                              <input type="checkbox" class="flat" name="d_[]" value="4"> <b>G.C.E. O/L Certificate</b>
+                              <input type="hidden" name="dn_[]" value="GCE_O/L" />
+                            </label>
+                              </div>                   
+                         
+                         
+                              <div class="checkbox col-md-3" >
+                            <label>
+                              <input type="checkbox" class="flat" name="d_[]" value="5"> <b>G.C.E. A/L Certificate</b>
+                              <input type="hidden" name="dn_[]" value="GCE_A/L" />
+                            </label>
+                         	 </div>
+                              <div class="checkbox col-md-3" >
+                            <label>
+                              <input type="checkbox" class="flat" name="d_[]" value="10"> <b>Diploma Certificate</b>
+                              <input type="hidden" name="dn_[]" value="Diploma" />
+                            </label>
+                         	 </div>                         	 
+                              <div class="checkbox col-md-3" >
+                            <label>
+                              <input type="checkbox" class="flat" name="d_[]" value="11"> <b>Higher Diploma</b>
+                              <input type="hidden" name="dn_[]" value="Higher_Diploma" />
+                            </label>
+                         	 </div> 
+                              <div class="checkbox col-md-3" >
+                            <label>
+                              <input type="checkbox" class="flat" name="d_[]" value="12"> <b>Degree</b>
+                              <input type="hidden" name="dn_[]" value="Degree" />
+                            </label>
+                         	 </div>                         	 
+                              <div class="checkbox col-md-3" >
+                            <label>
+                              <input type="checkbox" class="flat" name="d_[]" value="13"> <b>MSC</b>
+                              <input type="hidden" name="dn_[]" value="MSC" />
+                            </label>
+                         	 </div>
+                              <div class="checkbox col-md-3" >
+                            <label>
+                              <input type="checkbox" class="flat" name="d_[]" value="14"> <b>PHD</b>
+                              <input type="hidden" name="dn_[]" value="PHD" />
+                            </label>
+                         	 </div>                         	                          	                         	 										
+									</div>
+
+						<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+									<div class="row">
+										<span class="section"></span>	
+										<h4>Other Certificates</h4>
+									</div>
+									<div class="row">	
+                          <div class="checkbox col-md-3">
+                            <label>
+                              <input type="checkbox" class="flat" name="d_[]" value="1"> <b>Police Report</b>
+                              <input type="hidden" name="dn_[]" value="Police" />
+                            </label>
+                            
+                          </div>
+                     
+                          <div class="checkbox col-md-3" >
+                            <label>
+                              <input type="checkbox" class="flat" name="d_[]" value="2"> <b>GS Report</b>
+                              <input type="hidden" name="dn_[]" value="GS" />
+                            </label>
+                          </div>
+                              <div class="checkbox col-md-3" >
+                            <label>
+                              <input type="checkbox" class="flat" name="d_[]" value="15"> <b>Service Letters</b>
+                              <input type="hidden" name="dn_[]" value="Service_Letters" />
+                            </label>
+                         	 </div>                          
+                          										
+									</div>										
+									
+				<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->													
+
+                         	<div class="row">
+										<span class="section"></span>	
+										<h4>EPF Documents</h4> 
+									</div>
+									<div class="row">
+		                         <div class="checkbox col-md-3" >
+		                            <label>
+		                              <input type="checkbox" class="flat" name="d_[]" value="7"> <b>B Card</b>
+		                              <input type="hidden" name="dn_[]" value="EPF_B_Card" />
+		                            </label>
+		                          </div>
+									</div>								
+	
+
+</div>

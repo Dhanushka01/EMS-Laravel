@@ -1,0 +1,160 @@
+@include('navbar.leftbar')
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+	@if(Session::has('empAppr'))
+		<script type="text/javascript" >
+			swal("Good Job !","{!! Session::pull('empAppr') !!}","success",{
+				button:"ok",					
+			});
+		</script>	
+		Session::forget('empAppr');		
+	@endif
+
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
+
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-12">
+            <div class="card card-outline card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Employee Leave Balance</h3>
+               
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                <table id="example1" class="table table-bordered table-striped">
+                      <thead>
+                      	<tr>
+									<th style="text-align: center;" colspan="3">#</th>                      	
+									<th style="text-align: center;" colspan="4">Total</th>                      	
+									<th style="text-align: center;" colspan="4">Balance</th>                      	
+                      	</tr>
+                        <tr>
+                          <th>#</th>
+                          <th>EPF</th>
+                          <th>Name</th>
+                          <th>A/L</th>
+                          <th>Al-Old</th>
+                          <th>CL</th>
+                          <th>CL-N</th>
+                          <th>AL</th>							                           
+                          <th>AL-Old</th>							                           						                           
+                          <th>CL</th>							                           						                           
+                          <th>CL-N</th>							                           						                           
+                        </tr>
+
+                      </thead>
+ 								<?php
+ 									$date=date('Y-01-01');
+									$data = DB::table('mnrce_admin_emp_epfs')
+														->join('mnrce_admin_emp_personals','mnrce_admin_emp_personals.id','mnrce_admin_emp_epfs.emp_id')
+														
+														->get();
+									
+								?>                     
+								<tbody>
+									@foreach($data as $value)
+									<?php
+									$mas1 = DB::table('mnrce_admin_leave_genarates')
+														->where('epf_id',$value->id)																																
+														->where('applyDate','>=',$date)																																
+														->where('ltype','AL')																																
+														->sum('amount');									
+
+									$mas2 = DB::table('mnrce_admin_leave_genarates')
+														->where('epf_id',$value->id)																																
+														->where('applyDate','>=',$date)																																
+														->where('ltype','AL-Old')																																
+														->sum('amount');
+														
+									$mas3 = DB::table('mnrce_admin_leave_genarates')
+														->where('epf_id',$value->id)																																
+														->where('applyDate','>=',$date)																																
+														->where('ltype','CL')																																
+														->sum('amount');
+														
+									$mas4 = DB::table('mnrce_admin_leave_genarates')
+														->where('epf_id',$value->id)																																
+														->where('applyDate','>=',$date)																																
+														->where('ltype','CL-N')																																
+														->sum('amount');																																					
+									
+									$data1 = DB::table('mnrce_admin_leave_requests')
+														->where('epf_id',$value->id)																																
+														->where('reqDate','>=',$date)																																
+														->where('leaveType','AL')																																
+														->sum('leaveQty');
+														
+									$data2 = DB::table('mnrce_admin_leave_requests')
+														->where('epf_id',$value->id)																																
+														->where('reqDate','>=',$date)																																
+														->where('leaveType','AL-Old')																																
+														->sum('leaveQty');
+														
+									$data3 = DB::table('mnrce_admin_leave_requests')
+														->where('epf_id',$value->id)																																
+														->where('reqDate','>=',$date)																																
+														->where('leaveType','CL')																																
+														->sum('leaveQty');
+															
+									$data4 = DB::table('mnrce_admin_leave_requests')
+														->where('epf_id',$value->id)																																
+														->where('reqDate','>=',$date)																																
+														->where('leaveType','CL-N')																																
+														->sum('leaveQty');																																											
+									?>												
+									<tr style="">
+										<td>{{$loop->iteration}}</td>
+										<td>{{$value->id}}</td>	
+										<td>{{$value->nameini}}</td>	
+										<td style="text-align: right;">{{$data1}}</td>
+										<td style="text-align: right;">{{$data2}}</td>
+										<td style="text-align: right;">{{$data3}}</td>
+										<td style="text-align: right;">{{$data4}}</td>
+										<td style="text-align: right;">{{$mas1-$data1}}</td>
+										<td style="text-align: right;">{{$mas2-$data2}}</td>
+										<td style="text-align: right;">{{$mas3-$data3}}</td>
+										<td style="text-align: right;">{{$mas4-$data4}}</td>
+																				
+									</tr>
+									
+									@endforeach								
+								</tbody>                      
+                </table>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+            
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div>
+      <!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+
+
+  <!-- /.control-sidebar -->
+</div>
+<!-- ./wrapper -->
+
+</body>
+</html>

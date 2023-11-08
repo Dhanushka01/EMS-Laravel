@@ -1,0 +1,305 @@
+@include('navbar.leftbar')
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+
+	@if(Session::has('empsalinc'))
+		<script type="text/javascript" >
+			swal("Good Job !","{!! Session::pull('empsalinc') !!}","success",{
+				button:"ok",					
+			});
+		</script>	
+		Session::forget('empsalinc');		
+	@endif
+	
+	@if(Session::has('dupuser'))
+		<script type="text/javascript" >
+			swal("Try Again !!!","{!! Session::pull('dupuser') !!}","error",{
+				button:"ok",					
+			});
+		</script>	
+		Session::forget('dupuser');		
+	@endif
+
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
+
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-12">
+            <div class="card card-outline card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Basic Salary Increment</h3>
+                <div style="float: right;">
+                	<a>
+							<button class="btn btn-primary" onclick="showinsertmodel()" >New</button>   
+						</a>             
+                </div>               
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                <table id="example1" class="table table-bordered table-striped">
+                      <thead>
+                        <tr>
+                          <th>#</th>
+                          <th>Date</th>
+                          <th>Epf</th>
+                          <th>Name</th>
+                          <th>Postponed</th>
+                          <th>Increment</th>
+                          <th>Next Date</th>
+                          <th>Ref</th>
+                          <th>Remarks</th>
+
+
+         
+
+						                           
+                        </tr>
+                      </thead>
+ 								<?php
+									$data1 = DB::table('mnrce_admin_salary_incriments')
+														->join('mnrce_admin_emp_epfs','mnrce_admin_emp_epfs.id','=','mnrce_admin_salary_incriments.epf_id')
+														->join('mnrce_admin_emp_personals','mnrce_admin_emp_personals.id','=','mnrce_admin_emp_epfs.emp_id')
+														->orderBy('created_at','DESC')
+														->select('mnrce_admin_salary_incriments.*','mnrce_admin_emp_personals.nameini','mnrce_admin_emp_epfs.epf_no')														
+														->get();
+														
+									use Carbon\Carbon;
+								?>                     
+								<tbody>
+									@foreach($data1 as $value)
+									<tr style="">
+										<td>{{$loop->iteration}}</td>
+										<td>{{$value->edate}}</td>	
+										<td>{{$value->epf_no}}</td>														
+										<td>{{$value->nameini}}</td>														
+										<td>{{$value->post}}</td>														
+										<td>{{$value->inc}}</td>														
+										<td>{{$value->nxtdate}}</td>														
+										<td>{{$value->ref}}</td>														
+										<td>{{$value->remark}}</td>														
+													
+														
+													
+									</tr>
+									
+									@endforeach								
+								</tbody>                      
+                </table>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+            
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div>
+      <!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+
+
+  <!-- /.control-sidebar -->
+</div>
+<!-- ./wrapper -->
+
+</body>
+</html>
+
+    
+     
+<!-------------------------------------------- Insert Model --------------------------------------------- -->
+        
+<!-- Insert Model -->
+<script type="text/javascript" >
+	function showinsertmodel() {
+		$('#modal-xl').modal('show');		
+	}
+</script>
+
+	<div class="modal fade show" id="modal-xl">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+        <div class="card card-primary">
+             <div class="card-header">
+                	<h3 class="card-title">Basic Salary Increment </h3>
+               	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+               		<span aria-hidden="true">&times;</span>
+              		</button>
+              </div>
+				 <form id="demo-form" data-parsley-validate action="" method="POST">
+               @csrf
+                 <div class="card-body">
+						<div class="row">
+                    <div class="form-group col-md-4">
+                        <label for="password" >Date <span class="required" style="color: red;">*</span></label>
+                          <input id="ndate" class="form-control " name="ndate" value="<?php echo date('Y-m-d'); ?>"
+                          type="date" autocomplete="off">
+                        </div>				
+					
+                <div class="form-group col-md-8">
+                  <label for="epf">Select EPF No * :</label>
+                         <select id="epf" class="form-control epfselect select2" required name="epf">
+                             	<option value="">Select EPF No..</option>
+										<?php
+											$data = DB::table('mnrce_admin_emp_epfs')
+																	->where('resignDate',null)
+																	->join('mnrce_admin_emp_personals','mnrce_admin_emp_personals.id','mnrce_admin_emp_epfs.emp_id')
+																	->orderBy('mnrce_admin_emp_epfs.epf_no', 'ASC')
+																	->select('mnrce_admin_emp_epfs.*','mnrce_admin_emp_personals.nameini')
+																	->get();
+											foreach($data as $key => $value){
+												echo "<option value='".$value->id."'>".$value->epf_no." | ".$value->nameini."</option>";											
+											}
+										?>	                           
+                         </select>
+                </div>
+                
+     <div class="form-group col-md-6">
+      <label  for="user name">Designation
+      </label>
+        <input type="text" id="desig" name="desig"  class="form-control" readonly >
+    	</div>   
+     <div class="form-group col-md-6">
+      <label  for="user name">Salary Code
+      </label>
+        <input type="text" id="salc" name="salc"  class="form-control" readonly >
+    	</div>    	
+    	             	
+   <div class="form-group col-md-3">
+      <label class="">Postponed <span style="color: red;" class="required">*</span> </label>
+       <div class="btn-group btn-group-toggle" data-toggle="buttons">
+         <label class="btn btn-secondary active">
+           <input type="radio" name="post" id="option_a3" autocomplete="off" value="N" checked> No
+         </label>
+         <label class="btn btn-secondary">
+           <input type="radio" name="post" id="option_a4" autocomplete="off"  value="Y"> Yes
+         </label>
+       </div>
+    </div>
+         <div class="form-group col-md-3">
+      <label  for="user name">Count
+      </label>
+        <input type="number" id="count" name="count"  class="form-control" readonly >
+    	</div>
+     <div class="form-group col-md-3">
+      <label  for="user name">Increment  (Rs.)<span class="required" style="color: red;">*</span>
+      </label>
+        <input type="number" id="inc" name="inc" class="form-control" 
+        autocomplete="off" min="0" step="0.01" required>
+    </div>              
+ 
+     <div class="form-group col-md-3">
+      <label for="password" >Next Increment Date <span class="required" style="color: red;">*</span></label>
+       <input id="nxtdate" class="form-control"  name="nxtdate" type="date" autocomplete="off" 
+			value="<?php echo date('Y-m-d') ?>"       
+       required>
+
+    </div>
+
+                
+						<div class="form-group col-md-12">
+                      <label for="epf">Document Ref</label>
+                      <input type="text" id="ref" class="form-control" name="ref" value="-" />
+					 </div>
+                      <div class="form-group col-md-12">
+                        <label for="password" >Remarks <span class="required" style="color: red;">*</span></label>
+                          <textarea id="remarks" class="form-control " 
+                          name="remarks"></textarea>
+                        </div>							     							             					
+						</div>
+							
+                </div>                
+                
+            <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <input type="submit" name="submit" class="btn btn-warning" value="Save" >
+            </div>
+            </form>  
+          </div>
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+      </div>
+        <!-- /.modal-dialog -->
+<script src="assets/insuarance/invoice.js"></script>
+
+<script type="text/javascript" >
+$(document).ready(function(){	
+		$('#epf').change(function(){
+			
+		var epf=$('#epf').val();
+		if(epf==''||epf==-1){
+			swal("Please Enter  Valid Epf");	
+		}
+		else {
+			$.ajax({
+				type:'GET',
+				data:{epf:epf},
+				dataType: 'json',
+				url:'get-ajax-designation-by-epf-id',
+				success:function (result) {
+						$('#desig').val(result[0]['name']);
+
+						
+				}	
+			});
+			$.ajax({
+				type:'GET',
+				data:{epf:epf},
+				dataType: 'json',
+				url:'get-ajax-salary-code-by-epf-id',
+				success:function (result) {
+						$('#salc').val(result[0]['salcode']);
+						
+				}	
+			});	
+			$.ajax({
+				type:'GET',
+				data:{epf:epf},
+				dataType: 'json',
+				url:'get-ajax-salary-increment-count-by-epf-id',
+				success:function (result) {	
+					$('#count').val(result);
+						
+				}	
+			});
+
+			$.ajax({
+				type:'GET',
+				data:{epf:epf},
+				dataType: 'json',
+				url:'get-ajax-salary-increment-by-epf-id',
+				success:function (result) {	
+					$('#inc').val(result);
+						
+				}	
+			});			
+						
+		}
+		
+	});
+});
+
+</script>
+
+

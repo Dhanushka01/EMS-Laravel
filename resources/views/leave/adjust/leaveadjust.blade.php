@@ -1,0 +1,206 @@
+@include('navbar.leftbar')
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+	@if(Session::has('empAdj'))
+		<script type="text/javascript" >
+			swal("Good Job !","{!! Session::pull('empAdj') !!}","success",{
+				button:"ok",					
+			});
+		</script>	
+		Session::forget('empAdj');		
+	@endif
+
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
+
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-12">
+            <div class="card card-outline card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Employee Leave Data</h3>
+                <div style="float: right;">
+                	<a>
+							<button class="btn btn-primary" onclick="showinsertmodel()" >Adjust</button>   
+						</a>             
+                </div>               
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                <table id="example1" class="table table-bordered table-striped">
+                      <thead>
+                        <tr>
+                          <th>#</th>
+                          <th>EPF</th>
+                          <th>Name</th>
+                          <th>Leave Type</th>
+                          <th>Amount</th>
+                          <th>Apply Date</th>
+                          <th>Exp Date</th>							                           
+                        </tr>
+                      </thead>
+ 								<?php
+ 									$date=date('Y-01-01');
+									$data1 = DB::table('mnrce_admin_leave_genarates')
+														->where('applyDate','>=',$date)																
+														->orderBy('mnrce_admin_leave_genarates.epf_id', 'asc')
+														
+														->join('mnrce_admin_emp_epfs','mnrce_admin_emp_epfs.id','=','mnrce_admin_leave_genarates.epf_id')
+														->join('mnrce_admin_emp_personals','mnrce_admin_emp_personals.id','=','mnrce_admin_emp_epfs.emp_id')
+														->get();
+														
+									$count3 = DB::table('mnrce_admin_leave_genarates')->count();
+									
+								?>                     
+								<tbody>
+									@foreach($data1 as $value)
+									<tr style="">
+										<td>{{$loop->iteration}}</td>
+										<td>{{$value->epf_no}}</td>	
+										<td>{{$value->nameini}}</td>	
+										<td>{{$value->ltype}}</td>	
+										<td>{{$value->amount}}</td>
+										<td>{{$value->applyDate}}</td>
+										<td>{{$value->expDate}}</td>
+																				
+									</tr>
+									
+									@endforeach								
+								</tbody>                      
+                </table>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+            
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div>
+      <!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+
+
+  <!-- /.control-sidebar -->
+</div>
+<!-- ./wrapper -->
+
+</body>
+</html>
+<!-- Insert Model -->
+<script type="text/javascript" >
+	function showinsertmodel() {
+		$('#modal-insert').modal('show');		
+	}
+</script>
+
+      <div class="modal fade" id="modal-insert">
+        <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="card card-primary">
+             <div class="card-header">
+                	<h3 class="card-title">Adjust Leaves</h3>
+               	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+               		<span aria-hidden="true">&times;</span>
+              		</button>
+              </div>
+            <form action="employee-leave-adjust" method="POST"> 
+            @csrf
+            <div class="modal-body">
+            
+					
+            <div class="row">
+			                  
+              <div class="form-group col-md-12">
+                <label for="epf">Select EPF No * :</label>
+                  <select class="select2" multiple="multiple" data-placeholder="Select a EPF" style="width: 100%;" required name="epf_[]">
+									<?php
+										$data = DB::table('mnrce_admin_emp_epfs')
+																->where('resignDate',null)
+																->join('mnrce_admin_emp_personals','mnrce_admin_emp_personals.id','mnrce_admin_emp_epfs.emp_id')
+																->orderBy('mnrce_admin_emp_epfs.epf_no', 'ASC')
+																->select('mnrce_admin_emp_epfs.*','mnrce_admin_emp_personals.nameini')
+																->get();
+										foreach($data as $key => $value){
+											echo "<option value='".$value->id."'>".$value->epf_no." | ".$value->nameini."</option>";											
+										}
+									?>
+                  </select>
+				 </div>                 
+              <div class="form-group col-md-12">
+                <label for="epf">Leave Type :</label>
+                   <select id="leave" class="form-control epfselect select2" required name="leave" >
+                       	<option value="" selected>-- Select --</option>
+										<?php
+											$data = DB::table('mnrce_admin_master_leave_types')->get();
+											foreach($data as $key => $value){
+												echo "<option value='".$value->ltype."'>".$value->ltype."</option>";											
+											}
+										?>
+									                           
+                   </select>
+				 </div>           	
+				<div class="form-group col-md-12">
+			     <div class="btn-group " data-toggle="buttons">
+			         <label class="btn btn-danger active">
+			           <input type="radio" name="add" id="remove" autocomplete="off" value="remove" checked=""> Remove
+			         </label>
+			         <div style="float: right;">			       
+			         <label class="btn btn-success" >
+			           <input type="radio" name="add" id="add" autocomplete="off" value="add" > ADD
+			         </label>
+			       </div>
+			     </div>
+				</div>
+              <div class="form-group col-md-12">
+                <label for="epf">Amount :</label>
+					<input type="number" name="amount" id="amount" class="form-control" min="1" placeholder="Amount" required value="1" />	
+				 </div>
+              <div class="form-group col-md-12">
+                <label for="epf">Reason :</label>
+					<textarea class="form-control" name="reason" id="reason" required ></textarea>
+				 </div>                	           
+            </div>
+            <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <input type="submit" name="save" class="btn btn-warning" value="Save" >
+            </div>
+            </form>  
+          </div>
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        </div>
+        <!-- /.modal-dialog -->
+<script type="text/javascript" >
+$(document).ready(function(){	
+		$('#all').change(function(){
+		var all=$('#all').val();
+		if(all=='all'){
+			swal("Please Select a Job");	
+		}
+		else {
+			
+		}
+		
+	});
+});
+</script>
+

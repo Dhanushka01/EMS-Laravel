@@ -1,0 +1,43 @@
+<?php
+
+namespace App\Http\Controllers\Master\Leave;
+
+use Illuminate\Http\Request;
+
+use App\Http\Controllers\Controller;
+
+use App\Models\Master\Leave\Mnrce_admin_master_leave_type;
+
+class MnrceAdminMasterLeaveTypeController extends Controller
+{
+   public function index(Request $req) {
+		if(session('uname') && session('Status')=='A'){
+	   		return view('masters.leave.leaveMaster');	
+	   	}
+	   	else{
+
+	   		return redirect('/');
+	   	}		
+    }
+#================================================================================================ 
+	function new_leave_type(Request $req) {
+		$data=$req->input();	
+		$user=session('user');
+		
+		$Leave = new Mnrce_admin_master_leave_type;
+		
+		$Leave->ltype=$data['ltype'];
+		$Leave->max=$data['amount'];
+		$Leave->description=$data['remarks'];
+		$Leave->crby=$user;
+		$Leave->luby=$user;
+		$Leave->save();
+
+	   $req->session()->put('LeaveType','Successfully Saved Leave Master Data!!!');
+		return back();		
+	}
+	
+
+
+#
+}

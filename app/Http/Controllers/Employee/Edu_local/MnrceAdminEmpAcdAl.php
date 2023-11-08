@@ -1,0 +1,53 @@
+<?php
+
+namespace App\Http\Controllers\Employee\Edu_local;
+
+use App\Http\Controllers\Controller;
+
+use Illuminate\Http\Request;
+
+use App\Models\Employee\Edu_Local\Mnrce_admin_emp_acd_ol;
+
+class MnrceAdminEmpAcdAl extends Controller{
+	
+   public function index(Request $req) {
+		if(session('uname') && session('Status')=='A'){
+	   		return view('employee.al.newedual');	
+	   	}
+	   	else{
+
+	   		return redirect('/');
+    	}
+	}
+
+    function new_emp_edu_al(Request $req){
+    	$user=session('user');
+		$data=$req->input();
+		$epf=$data['epf'];    
+		
+		$sub=$data['suba_'];
+		$grade=$data['gra_'];
+		
+		foreach($sub as $key => $value){
+			if($value=='') {
+				continue;				
+			}
+			$Local = new Mnrce_admin_emp_acd_ol;
+			
+			$Local->epf_id=$data['epf'];
+			$Local->type='GCE A/L';
+			$Local->eindex=$data['aindex'];
+			$Local->eyear=$data['ayear'];
+			$Local->subject=$sub[$key];
+			$Local->sgrade=$grade[$key];
+			$Local->crby=$user;
+			$Local->luby=$user;
+			$Local->save();	
+		
+		}  
+			$req->session()->put('empAL','Successfully Saved Employee A/L Exam Results !!!');
+			return back();
+    }
+
+#	
+}

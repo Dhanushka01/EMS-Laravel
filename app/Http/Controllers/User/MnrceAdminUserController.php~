@@ -1,0 +1,134 @@
+<?php
+
+namespace App\Http\Controllers\User;
+
+use App\Http\Controllers\Controller;
+
+use Illuminate\Http\Request;
+
+use App\Models\User\Mnrce_admin_user;
+use App\Models\Employee\Epf\Mnrce_admin_emp_epf;
+
+class MnrceAdminUserController extends Controller
+{
+	public function index(){
+		if(session('uname') && session('Status')=='A'){
+	   		return view('user.reg.reguser');	
+	   	}
+	   	else{
+
+	   		return redirect('/');
+	   	}	
+
+		
+	}
+#-----------------------------------------------------------------------------------------------------------
+	public function index2(){
+		if(session('uname') && session('Status')=='A'){
+	   		return view('user.pass.passreset');	
+	   	}
+	   	else{
+
+	   		return redirect('/');
+	   	}	
+
+		
+	}	
+	
+#-----------------------------------------------------------------------------------------------------------
+	public function index3(){
+		if(session('uname') && session('Status')=='A'){
+	   		return view('user.pass.passresetuser');	
+	   	}
+	   	else{
+
+	   		return redirect('/');
+	   	}	
+
+		
+	}	
+		
+#============================================================================================================#
+	function check_user_name($username) {
+		$user1= Mnrce_admin_user::where('username', $username)
+         		   					->count();		
+      if($user1>0) {
+			return false;      
+      }
+      else {
+			return true;      
+      }	
+	
+	}
+	
+#============================================================================================================#	
+	function create_new_user(Request $req) {
+		if(isset($_POST['submit'])) {
+			$data=$req->input();
+			
+    		$user1=session('user');
+    		
+    		$user2=$data['epf'];
+    		
+    		$ct=time();	
+    		$pass=md5($data['psw']);		
+			$user= new Mnrce_admin_user;
+			
+			$chekUser=$this->check_user_name($data['uname']);
+			if($chekUser) {
+				$user->epf_id=$data['epf'];
+				$user->username=$data['uname'];
+				$user->password=$pass;
+				$user->role_id=$data['role'];
+				$user->passReset=0;
+				$user->user_status=$data['status'];
+				$user->crby=$user1;
+				$user->luby=$user1;
+				$user->save();
+				
+				$user3= Mnrce_admin_emp_epf::where('emp_id', $user2)
+	         		   						->update(['sys_user' => '1']);			
+	         		   
+				$req->session()->put('user1','Successfully Saved Employee Data!!!');
+				return redirect('user-reg');
+			}
+			else {
+ 				$req->session()->put('dupuser','User Available in the System !!!');
+				return redirect('user-reg');	
+			}
+		}
+		else {
+ 			$req->session()->put('dupuser','Failed to run script!!!');
+			return redirect('user-reg');		
+		}   	
+	}
+
+  function password_reset_by_admin(Request $req){
+  		$data=$req->input();
+  		$pass=md5($data['psw']);
+   	$user=$data['epf'];
+		$user1= Mnrce_admin_user::where('epf_id',$user)
+         		   					->update(['password' => $pass]); 
+ 		
+ 		$req->session()->put('user1','Successfully changed the password!!!');
+ 		
+		return redirect('user-pass-reset');	        		    
+  }	
+
+  function password_reset_by_user(Request $req){
+  		$data=$req->input();
+  		
+  		$pass=md5($data['psw']);
+  		
+   	$user=session('user');
+   	
+		$user1= Mnrce_admin_user::find($user)
+         		   					->update(['password' => $pass]); 
+ 		
+ 		$req->session()->put('user1','Successfully changed the password!!!');
+ 		
+		return redirect('user-pass-reset');	        		    
+  }
+	
+#	
+}

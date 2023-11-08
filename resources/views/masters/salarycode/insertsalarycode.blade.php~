@@ -1,0 +1,308 @@
+@include('navbar.leftbar')
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+
+@if(Session::has('salcode'))
+	<script type="text/javascript" >
+		swal("Good Job !","{!! Session::pull('salcode') !!}","success",{
+			button:"ok",					
+		});
+	</script>	
+	Session::forget('salcode');		
+@endif
+
+
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
+
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-12">
+            <div class="card card-outline card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Salary Codes</h3>
+                <div style="float: right;">
+                	<a>
+							<button class="btn btn-primary" onclick="showinsertmodel()" >New</button>   
+						</a>             
+                </div>               
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                <table id="example1" class="table table-bordered table-striped">
+                      <thead>
+                        <tr>
+                          <th>#</th>
+                          <th>Effective Date</th>
+                          <th>Salary Code</th>
+                          <th>Opt</th>
+                          <th>Basic Sal</th>
+                          <th>COfL</th>
+                          <th>Inc. 1</th>
+                          <th>Inc. 2</th>
+                          <th>Inc. 3</th>
+                          <th>Inc. 4</th>
+                          <th>Inc. 5</th>
+
+                          <th>Total</th>
+
+         
+
+						                           
+                        </tr>
+                      </thead>
+ 								<?php
+									$data1 = DB::table('mnrce_admin_master_salary_codes')		
+														->where('revdate',NULL)	
+														->orderBy('salcode','ASC')										
+														->get();
+														
+
+								?>                     
+								<tbody>
+									@foreach($data1 as $value)
+									<tr style="">
+										<td>{{$loop->iteration}}</td>
+										<td>{{$value->effdate}}</td>	
+										<td>{{$value->salcode}}</td>											
+										<td>{{$value->opt}}</td>															
+										<td>{{number_format($value->bsal,2)}}</td>															
+										<td>{{number_format($value->costl,2)}}</td>																													
+										<td>{{$value->ir1}} X {{$value->yr1}}</td>															
+										<td>{{$value->ir2}} X {{$value->yr2}}</td>															
+										<td>{{$value->ir3}} X {{$value->yr3}}</td>															
+										<td>{{$value->ir4}} X {{$value->yr4}}</td>															
+										<td>{{$value->ir5}} X {{$value->yr5}}</td>															
+						
+										<td style="text-align: right;">
+										{{number_format($value->bsal+$value->costl+
+																$value->ir1*$value->yr1+
+																$value->ir2*$value->yr2+
+																$value->ir3*$value->yr3+
+																$value->ir4*$value->yr4+
+																$value->ir5*$value->yr5,2)}}
+										</td>														
+															
+									</tr>
+									
+									@endforeach								
+								</tbody>                      
+                </table>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+            
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div>
+      <!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+
+
+  <!-- /.control-sidebar -->
+</div>
+<!-- ./wrapper -->
+
+</body>
+</html>
+<!-- Insert Model -->
+<script type="text/javascript" >
+	function showinsertmodel() {
+		$('#modal-insert').modal('show');		
+	}
+</script>
+
+      <div class="modal fade" id="modal-insert">
+        <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="card card-primary">
+             <div class="card-header">
+                	<h3 class="card-title">User Registration Form</h3>
+               	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+               		<span aria-hidden="true">&times;</span>
+              		</button>
+              </div>
+               <form id="demo-form" method="POST" action="master-salarycode-new" data-parsley-validate>
+               @csrf
+                <div class="card-body">
+               	<div class="row">
+	                  <div class="form-group col-md-6">
+	                    <label for="epf">Effective Date * :</label>
+	                    <input type="date" id="" class="form-control" name="date" required />
+	                  </div>
+	                  <div class="form-group col-md-6">
+	                      <label for="epf">Salary Code :</label>
+	                      <input type="text" id="" class="form-control" name="scode" placeholder="Salary Code" required />
+	                  </div> 
+	                </div>
+	                <div class="row">
+	                  <div class="form-group col-md-12">
+	                      <label for="epf">Cost of Living</label>
+	                      <input type="number" step="0.01" id="" value="7800.00" class="form-control" name="csal" placeholder="Cost Of Living" required min="0" />
+	                  </div>	                
+	                
+	                </div>                   
+                </div>
+
+                
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-header p-2">
+                <ul class="nav nav-pills">
+                  <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Option 1</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#timeline" data-toggle="tab">Option 2</a></li>
+                </ul>
+              </div><!-- /.card-header -->
+              <div class="card-body">
+                <div class="tab-content">
+                  <div class="active tab-pane" id="activity">
+ 				<div class="row">
+ 				     <div class="form-group col-md-12">
+                      <label for="epf">Basic Salary</label>
+                      <input type="number" step="0.01" id="" class="form-control" name="bsal1" placeholder="Basic Salary 1" required min="0" />
+						 </div>
+				</div>
+ 				<div class="row">
+                    <table class="data table table-striped no-margin">
+                      <thead>
+                        <tr>
+                          <th>#</th>
+                          <th>Increment</th>
+                          <th>Years</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+									<tr>
+										<td>1.</td>								
+										<td><input type="number" name="ir11" step="0.01" min="0" class="form-control" required /></td>									
+										<td><input type="number" name="yr11" min="0" class="form-control" required /></td>																
+									</tr>
+									<tr>
+										<td>2.</td>								
+										<td><input type="number" name="ir12" step="0.01" min="0" class="form-control" required /></td>									
+										<td><input type="number" name="yr12" min="0" class="form-control" required /></td>																
+									</tr>
+									<tr>
+										<td>3.</td>								
+										<td><input type="number" name="ir13" step="0.01" min="0" class="form-control" required /></td>									
+										<td><input type="number" name="yr13" min="0" class="form-control" required /></td>																
+									</tr>
+									<tr>
+										<td>4.</td>								
+										<td><input type="number" name="ir14" step="0.01" min="0" class="form-control" /></td>									
+										<td><input type="number" name="yr14" min="0" class="form-control"/></td>																
+									</tr>
+									<tr>
+										<td>5.</td>								
+										<td><input type="number" name="ir15" step="0.01" min="0" class="form-control" /></td>									
+										<td><input type="number" name="yr15" min="0" class="form-control"/></td>																
+									</tr>																																				
+                      </tbody>
+                    </table>
+
+
+              </div>
+				</div>
+
+                  
+                  
+                  
+                  <!-- /.tab-pane -->
+                  <div class="tab-pane" id="timeline">
+ 				<div class="row">
+ 				     <div class=" form-group col-md-12">
+                      <label for="epf">Basic Salary</label>
+                      <input type="number" step="0.01" id="" class="form-control" name="bsal2" placeholder="Basic Salary 2"  min="0" />
+						 </div>
+				</div>	    
+ 				<div class="row">
+
+
+
+                    <table class="data table table-striped no-margin">
+                      <thead>
+                        <tr>
+                          <th>#</th>
+                          <th>Increment</th>
+                          <th>Years</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+									<tr>
+										<td>1.</td>								
+										<td><input type="number" name="ir21" step="0.01" min="0" class="form-control" /></td>									
+										<td><input type="number" name="yr21" min="0" class="form-control"/></td>																
+									</tr>
+									<tr>
+										<td>2.</td>								
+										<td><input type="number" name="ir22" step="0.01" min="0" class="form-control" /></td>									
+										<td><input type="number" name="yr22" min="0" class="form-control"/></td>																
+									</tr>
+									<tr>
+										<td>3.</td>								
+										<td><input type="number" name="ir23" step="0.01" min="0" class="form-control" /></td>									
+										<td><input type="number" name="yr23" min="0" class="form-control"/></td>																
+									</tr>
+									<tr>
+										<td>4.</td>								
+										<td><input type="number" name="ir24" step="0.01" min="0" class="form-control" /></td>									
+										<td><input type="number" name="yr24" min="0" class="form-control"/></td>																
+									</tr>
+									<tr>
+										<td>5.</td>								
+										<td><input type="number" name="ir25" step="0.01" min="0" class="form-control" /></td>									
+										<td><input type="number" name="yr25" min="0" class="form-control"/></td>																
+									</tr>																																				
+                      </tbody>
+                    </table>
+
+
+
+	    <!-- end user projects -->
+	
+	  </div>
+                  </div>
+                  <!-- /.tab-pane -->
+
+                </div>
+                <!-- /.tab-content -->
+              </div><!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>                   
+
+                
+                
+            <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <input type="submit" name="submit" class="btn btn-warning" value="Save" >
+            </div>
+            </form>  
+          </div>
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        </div>
+        <!-- /.modal-dialog -->
+
+

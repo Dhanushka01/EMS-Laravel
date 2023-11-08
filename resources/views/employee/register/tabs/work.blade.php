@@ -1,0 +1,112 @@
+<div class="card-body">
+	<div class="row">
+	       <h2 class="StepTitle">Working Experience</h2>
+	</div>
+            
+	      <div class="row">
+	       <div class="form-group col-md-4">
+	        <center><label>Post</label></center>
+	        <input id="" class="form-control "  name="woep_[]" placeholder=""  type="text">
+	      </div>    
+	      
+	      <div class="form-group col-md-4">
+	        <center><label>Institute Name</label></center>
+	        <input id="" class="form-control "  name="woei_[]" placeholder=""  type="text">
+	      </div>    
+	      
+	      <div class="form-group col-md-2">
+	        <center><label>From</label></center>
+	        <input id="" class="form-control "  name="woef_[]" placeholder=""  type="date">
+	      </div>                       
+	      <div class="form-group col-md-2">
+	        <center><label>To</label></center>
+	        <input id="" class="form-control "  name="woet_[]" placeholder=""  type="date">
+	      </div>                         
+	      
+	      </div>
+	      <div class="row">
+	       <div class="form-group col-md-4">
+	        <center><label>Post</label></center>
+	        <input id="" class="form-control "  name="woep_[]" placeholder=""  type="text">
+	      </div>    
+	      
+	      <div class="form-group col-md-4">
+	        <center><label>Institute Name</label></center>
+	        <input id="" class="form-control "  name="woei_[]" placeholder=""  type="text">
+	      </div>    
+	      
+	      <div class="form-group col-md-2">
+	        <center><label>From</label></center>
+	        <input id="" class="form-control "  name="woef_[]" placeholder=""  type="date">
+	      </div>                       
+	      <div class="form-group col-md-2">
+	        <center><label>To</label></center>
+	        <input id="" class="form-control "  name="woet_[]" placeholder=""  type="date">
+	      </div>                         
+	      
+	      </div>
+	      <div class="row">
+	       <div class="form-group col-md-4">
+	        <center><label>Post</label></center>
+	        <input id="" class="form-control "  name="woep_[]" placeholder=""  type="text">
+	      </div>    
+	      
+	      <div class="form-group col-md-4">
+	        <center><label>Institute Name</label></center>
+	        <input id="" class="form-control "  name="woei_[]" placeholder=""  type="text">
+	      </div>    
+	      
+	      <div class="form-group col-md-2">
+	        <center><label>From</label></center>
+	        <input id="" class="form-control "  name="woef_[]" placeholder=""  type="date">
+	      </div>                       
+	      <div class="form-group col-md-2">
+	        <center><label>To</label></center>
+	        <input id="" class="form-control "  name="woet_[]" placeholder=""  type="date">
+	      </div>                         
+	      
+	      </div>   
+	       <div class="row">
+	       <div class="form-group col-md-4">
+	        <center><label>Post</label></center>
+	        <input id="" class="form-control "  name="woep_[]" placeholder=""  type="text">
+	      </div>    
+	      
+	      <div class="form-group col-md-4">
+	        <center><label>Institute Name</label></center>
+	        <input id="" class="form-control "  name="woei_[]" placeholder=""  type="text">
+	      </div>    
+	      
+	      <div class="form-group col-md-2">
+	        <center><label>From</label></center>
+	        <input id="" class="form-control "  name="woef_[]" placeholder=""  type="date">
+	      </div>                       
+	      <div class="form-group col-md-2">
+	        <center><label>To</label></center>
+	        <input id="" class="form-control "  name="woet_[]" placeholder=""  type="date">
+	      </div>                         
+	      
+	      </div> 
+	       <div class="row">
+	       <div class="form-group col-md-4">
+	        <center><label>Post</label></center>
+	        <input id="" class="form-control "  name="woep_[]" placeholder=""  type="text">
+	      </div>    
+	      
+	      <div class="form-group col-md-4">
+	        <center><label>Institute Name</label></center>
+	        <input id="" class="form-control "  name="woei_[]" placeholder=""  type="text">
+	      </div>    
+	      
+	      <div class="form-group col-md-2">
+	        <center><label>From</label></center>
+	        <input id="" class="form-control "  name="woef_[]" placeholder=""  type="date">
+	      </div>                       
+	      <div class="form-group col-md-2">
+	        <center><label>To</label></center>
+	        <input id="" class="form-control "  name="woet_[]" placeholder=""  type="date">
+	      </div>                         
+	      
+	      </div>	
+
+</div>

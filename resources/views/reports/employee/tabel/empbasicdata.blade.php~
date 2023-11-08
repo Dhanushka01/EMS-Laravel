@@ -1,0 +1,140 @@
+@include('navbar.leftbar')
+
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
+
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-12">
+            <div class="card card-outline card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Employee basic data</h3>
+              </div>
+              <!-- /.card-header -->
+
+              <div class="card-body">
+                <table id="example1" class="table table-bordered table-striped" style="width: 100%">
+                      <thead>
+                        <tr>
+                          <th>#</th>
+                          <th>EPF</th>
+                          <th>Name</th>
+                          <th>DOB</th>
+                          <th>NIC</th>
+                          
+
+                          <th>Driving License No</th>
+                          
+                          <th>Gender</th>
+                          <th>Civil Status</th>  
+                          <th>Appointment Date</th>                        
+								  <th>Service Years</th> 
+                          <th>Retirement Date</th>
+                          <th>How many years for Retirement</th>								                           
+                          <th>Remarks</th>
+                        </tr>
+                      </thead>
+ 								<?php
+									$data1 = DB::table('mnrce_admin_emp_epfs')
+														->join('mnrce_admin_emp_personals','mnrce_admin_emp_personals.id','mnrce_admin_emp_epfs.emp_id')
+														->orderBy('epf_no', 'asc')
+														->get();
+									//$count3 = DB::table('emppersonals')->count();
+									use Carbon\Carbon;
+								?>                     
+								<tbody>
+									@foreach($data1 as $value)
+									<tr style="">
+										<td>{{$loop->iteration}}</td>
+										<td>{{$value->epf_no}}</td>	
+										<td>{{$value->fullname}}</td>	
+										<td>{{$value->dob}}</td>
+										<td>{{$value->nic}}</td>
+										
+
+										<td>{{$value->dlicence}}</td>
+										
+										<td>
+											@if($value->gender=='M')
+												Male
+											@else
+												Female
+											@endif		
+										</td>
+										<td>
+											@if($value->cstatus=='M')
+												Married
+											@else
+												Single
+											@endif		
+										</td>										
+										<td>{{$apoi=$value->appoint_date}}</td>
+
+										<?php
+									$date = Carbon::parse($apoi);
+									$now = Carbon::now();
+									
+									$diff = $date->diff($now)->format('%y years, %m months and %d days');
+									/*
+									$diff2=$diff1/365.25;
+									$diff =round($diff2, 0);
+									*/										
+										?>
+										<td>{{$diff}}</td>
+										
+										<td>{{$pen=$value->pen_date}}</td>
+										
+										<?php
+											$date = Carbon::parse($pen);
+											$diff = $date->diff($now)->format('%y years, %m months and %d days');
+											/*
+											$diff2=$diff1/365.25;
+											$diff =round($diff2, 0);
+											*/											
+										?>
+										<td>{{$diff}}</td>																				
+										
+										<td>{{$value->remarks}}</td>
+																				
+									</tr>
+									
+									@endforeach								
+								</tbody>                      
+                </table>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+            
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div>
+      <!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+
+
+  <!-- /.control-sidebar -->
+</div>
+<!-- ./wrapper -->
+
+</body>
+</html>

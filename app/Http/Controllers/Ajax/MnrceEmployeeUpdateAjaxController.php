@@ -1,0 +1,94 @@
+<?php
+
+namespace App\Http\Controllers\Ajax;
+
+use App\Http\Controllers\Controller;
+
+use Illuminate\Http\Request;
+
+use App\Models\Employee\Personal\Mnrce_admin_emp_personal;
+use App\Models\Employee\Epf\Mnrce_admin_emp_epf;
+use App\Models\Employee\Contact\Mnrce_admin_emp_contact;
+use App\Models\Employee\Emergency\Mnrce_admin_emp_emer_contact;
+use App\Models\Employee\Edu_profitional\Mnrce_admin_emp_acd_profi;
+use App\Models\Employee\Certificate\Mnrce_admin_emp_certificate;
+use App\Models\Employee\Edu_basic\Mnrce_admin_emp_acd_basic;
+use App\Models\Employee\Edu_hire\Mnrce_admin_emp_acd_high;
+use App\Models\Employee\Past_emp\Mnrce_admin_emp_work_exper;
+use App\Models\Employee\Edu_Local\Mnrce_admin_emp_acd_ol;
+
+class MnrceEmployeeUpdateAjaxController extends Controller{
+
+    function checkAjaxEmployeeEpfId(Request $req) {
+        $epf=$req['epf'];    
+        //$epf=91;    
+        
+        
+        $emp1= Mnrce_admin_emp_epf::where('id',$epf)
+                                        ->count();
+         if($emp1>0){
+             echo 'ERROR';
+         }                                   
+          
+        
+    } 
+
+//=====================================================================================================================================//
+
+    function checkAjaxEmployeeEpf(Request $req) {
+        $epf=$req['epf'];    
+        //$epf=2181;    
+        
+        
+        $emp1= Mnrce_admin_emp_epf::where('epf_no',$epf)
+                                        ->count();
+         if($emp1>0){
+             echo 'ERROR';
+         }                                   
+          
+        
+    }
+
+
+//=====================================================================================================================================//
+    function getAjaxEmployeePersonalDataByEpfId(Request $req) {
+        $epf=$req['epf'];    
+        //$epf=91;    
+        
+        
+        $emp1= Mnrce_admin_emp_epf::join('mnrce_admin_emp_personals','mnrce_admin_emp_personals.id','mnrce_admin_emp_epfs.emp_id')
+                                        ->where('mnrce_admin_emp_epfs.id',$epf)
+                                        ->select('mnrce_admin_emp_epfs.*','mnrce_admin_emp_personals.fullname','mnrce_admin_emp_personals.nameini', 'mnrce_admin_emp_personals.nic','mnrce_admin_emp_personals.passport', 'mnrce_admin_emp_personals.dlicence','mnrce_admin_emp_personals.dob', 'mnrce_admin_emp_personals.remarks','mnrce_admin_emp_personals.gender', 'mnrce_admin_emp_personals.cstatus')
+                                        ->get();
+        echo json_encode($emp1);   
+        
+    } 
+
+//=====================================================================================================================================//
+    
+    function getAjaxEmployeeContactDataByEpfId(Request $req) {
+        $epf=$req['epf'];   
+
+        
+        
+        $emp1= Mnrce_admin_emp_contact::where('epf_id',$epf)
+                                        ->get();
+        echo json_encode($emp1);   
+        
+    }
+
+//=====================================================================================================================================//
+
+    function getAjaxEmployeeEmergencyContactDataByEpfId(Request $req) {
+        $epf=$req['epf'];   
+    
+        $emp1= Mnrce_admin_emp_emer_contact::where('epf_id',$epf)
+                                            ->get();
+        
+        echo json_encode($emp1);   
+        
+    }
+
+
+#
+}

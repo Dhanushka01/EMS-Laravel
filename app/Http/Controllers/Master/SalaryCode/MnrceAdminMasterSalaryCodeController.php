@@ -1,0 +1,187 @@
+<?php
+
+namespace App\Http\Controllers\Master\SalaryCode;
+
+use Illuminate\Http\Request;
+
+use App\Http\Controllers\Controller;
+
+use App\Models\Master\SalaryCode\Mnrce_admin_master_salary_code;
+
+class MnrceAdminMasterSalaryCodeController extends Controller
+{
+   public function index(Request $req) {
+		if(session('uname') && session('Status')=='A'){
+	   		return view('masters.salarycode.insertsalarycode');	
+	   	}
+	   	else{
+
+	   		return redirect('/');
+	   	}		
+    }
+#================================================================================================    
+	function check_salary_code($salcode,$opt) {
+		$user1= Mnrce_admin_master_salary_code::where('salcode', $salcode)
+															->where('opt', $opt)
+									         		   ->count();		
+         		   
+      if($user1>0) {
+			return true;      
+      }
+      else {
+			return false;      
+      }	
+	
+	}	
+	
+#=================================================================================================================
+	function new_salary_code(Request $req){
+	   
+	   $user=session('user');
+    	$ct=time();
+    	
+		//dd($req->all());
+		$data=$req->input();
+		
+		$salcode=$data['scode'];
+		$date=$data['date'];
+		$opt='Option 1';
+		$checkSal =$this->check_salary_code($salcode,$opt);
+		
+		if($checkSal) {
+			$Sal1= Mnrce_admin_master_salary_code::where('salcode', $salcode)
+																->where('opt', $opt)
+										         		   ->update(['revdate' => $date,        		   
+										         		   'luby' =>$user]);
+	         		   
+				$Sal = new Mnrce_admin_master_salary_code;
+				
+				$Sal->effdate=$data['date'];
+				$Sal->salcode=$data['scode'];
+				$Sal->opt='Option 1';
+				$Sal->bsal=$data['bsal1'];
+				$Sal->costl=$data['csal'];
+				$Sal->ir1=$data['ir11'];
+				$Sal->ir2=$data['ir12'];
+				$Sal->ir3=$data['ir13'];
+				$Sal->ir4=$data['ir14'];
+				$Sal->ir5=$data['ir15'];
+				$Sal->yr1=$data['yr11'];
+				$Sal->yr2=$data['yr12'];
+				$Sal->yr3=$data['yr13'];
+				$Sal->yr4=$data['yr14'];
+				$Sal->yr5=$data['yr15'];			
+				$Sal->crby=$user;
+				$Sal->luby=$user;
+				$Sal->save();
+					         		   
+	     	$opt='Option 2';
+	     	
+			$checkSal1 =$this->check_salary_code($salcode,$opt);   
+			
+			if($checkSal1) {
+				$Sal1= Mnrce_admin_master_salary_code::where('salcode', $salcode)
+														->where('opt', $opt)
+								         		   ->update(['revdate' => $date,	         		   
+								         		   'luby' =>$user]);
+		         		   
+								$Sal = new Mnrce_admin_master_salary_code;
+								
+								$Sal->effdate=$data['date'];
+								$Sal->salcode=$data['scode'];
+								$Sal->opt='Option 2';
+								$Sal->bsal=$data['bsal2'];
+								$Sal->costl=$data['csal'];
+								$Sal->ir1=$data['ir21'];
+								$Sal->ir2=$data['ir22'];
+								$Sal->ir3=$data['ir23'];
+								$Sal->ir4=$data['ir24'];
+								$Sal->ir5=$data['ir25'];
+								$Sal->yr1=$data['yr21'];
+								$Sal->yr2=$data['yr22'];
+								$Sal->yr3=$data['yr23'];
+								$Sal->yr4=$data['yr24'];
+								$Sal->yr5=$data['yr25'];			
+								$Sal->crby=$user;
+								$Sal->luby=$user;
+								$Sal->save();		         		    	
+		         		}
+		         		elseif(isset($data['bsal2'])) {
+		         			
+								$Sal = new Mnrce_admin_master_salary_code;
+								
+								$Sal->effdate=$data['date'];
+								$Sal->salcode=$data['scode'];
+								$Sal->opt='Option 2';
+								$Sal->bsal=$data['bsal2'];
+								$Sal->costl=$data['csal'];
+								$Sal->ir1=$data['ir21'];
+								$Sal->ir2=$data['ir22'];
+								$Sal->ir3=$data['ir23'];
+								$Sal->ir4=$data['ir24'];
+								$Sal->ir5=$data['ir25'];
+								$Sal->yr1=$data['yr21'];
+								$Sal->yr2=$data['yr22'];
+								$Sal->yr3=$data['yr23'];
+								$Sal->yr4=$data['yr24'];
+								$Sal->yr5=$data['yr25'];			
+								$Sal->crby=$user;
+								$Sal->luby=$user;
+								$Sal->save();		         		
+		         		}	   
+	    	$req->session()->put('salcode','Successfully Saved Salary Data!!!');
+			return redirect('master-salarycode-new');	
+	         		   				
+		}
+		else {
+			if(isset($data['bsal1'])) {
+				$Sal = new Mnrce_admin_master_salary_code;
+				
+				$Sal->effdate=$data['date'];
+				$Sal->salcode=$data['scode'];
+				$Sal->opt='Option 1';
+				$Sal->bsal=$data['bsal1'];
+				$Sal->costl=$data['csal'];
+				$Sal->ir1=$data['ir11'];
+				$Sal->ir2=$data['ir12'];
+				$Sal->ir3=$data['ir13'];
+				$Sal->ir4=$data['ir14'];
+				$Sal->ir5=$data['ir15'];
+				$Sal->yr1=$data['yr11'];
+				$Sal->yr2=$data['yr12'];
+				$Sal->yr3=$data['yr13'];
+				$Sal->yr4=$data['yr14'];
+				$Sal->yr5=$data['yr15'];			
+				$Sal->crby=$user;
+				$Sal->luby=$user;
+				$Sal->save();
+			}
+			if(isset($data['bsal2'])) {
+				$Sal = new Mnrce_admin_master_salary_code;
+				
+				$Sal->effdate=$data['date'];
+				$Sal->salcode=$data['scode'];
+				$Sal->opt='Option 2';
+				$Sal->bsal=$data['bsal2'];
+				$Sal->costl=$data['csal'];
+				$Sal->ir1=$data['ir21'];
+				$Sal->ir2=$data['ir22'];
+				$Sal->ir3=$data['ir23'];
+				$Sal->ir4=$data['ir24'];
+				$Sal->ir5=$data['ir25'];
+				$Sal->yr1=$data['yr21'];
+				$Sal->yr2=$data['yr22'];
+				$Sal->yr3=$data['yr23'];
+				$Sal->yr4=$data['yr24'];
+				$Sal->yr5=$data['yr25'];			
+				$Sal->crby=$user;
+				$Sal->luby=$user;
+				$Sal->save();
+			}			
+			$req->session()->put('salcode','Successfully Saved Salary Data!!!');
+			return redirect('master-salarycode-new');	
+		}
+	
+	}    
+#    	
+}

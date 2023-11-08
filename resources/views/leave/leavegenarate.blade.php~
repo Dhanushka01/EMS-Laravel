@@ -1,0 +1,105 @@
+@include('navbar.leftbar')
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+	@if(Session::has('lgen'))
+		<script type="text/javascript" >
+			swal("Good Job !","{!! Session::pull('lgen') !!}","success",{
+				button:"ok",					
+			});
+		</script>	
+		Session::forget('lgen');		
+	@endif
+
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
+
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-12">
+            <div class="card card-outline card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Employee Leave Data</h3>
+                <div style="float: right;">
+                	<a href="/leaveGenarate" >
+							<button class="btn btn-primary" >Generate</button>   
+						</a>             
+                </div>               
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                <table id="example1" class="table table-bordered table-striped">
+                      <thead>
+                        <tr>
+                          <th>#</th>
+                          <th>EPF</th>
+                          <th>Name</th>
+                          <th>Leave Type</th>
+                          <th>Amount</th>
+                          <th>Apply Date</th>
+                          <th>Exp Date</th>							                           
+                        </tr>
+                      </thead>
+ 								<?php
+ 									$date=date('Y-01-01');
+									$data1 = DB::table('leave__genarates')
+														->where('applyDate','>=',$date)																
+														->orderBy('leave__genarates.EpfNo', 'asc')
+														
+														->join('emppersonals','emppersonals.EpfNo','=','leave__genarates.EpfNo')
+														->get();
+														
+									$count3 = DB::table('leave__genarates')->count();
+									
+								?>                     
+								<tbody>
+									@foreach($data1 as $value)
+									<tr style="">
+										<td>{{$loop->iteration}}</td>
+										<td>{{$value->EpfNo}}</td>	
+										<td>{{$value->nameini}}</td>	
+										<td>{{$value->ltype}}</td>	
+										<td>{{$value->amount}}</td>
+										<td>{{$value->applyDate}}</td>
+										<td>{{$value->expDate}}</td>
+																				
+									</tr>
+									
+									@endforeach								
+								</tbody>                      
+                </table>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+            
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div>
+      <!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+
+
+  <!-- /.control-sidebar -->
+</div>
+<!-- ./wrapper -->
+
+</body>
+</html>

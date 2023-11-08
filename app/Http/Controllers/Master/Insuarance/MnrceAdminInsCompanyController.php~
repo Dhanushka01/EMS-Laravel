@@ -1,0 +1,56 @@
+<?php
+
+namespace App\Http\Controllers\Master\Insuarance;
+
+use Illuminate\Http\Request;
+
+use App\Http\Controllers\Controller;
+
+use App\Models\Master\Insuarance\Mnrce_admin_ins_company;
+
+class MnrceAdminInsCompanyController extends Controller{
+   public function index(Request $req) {
+		if(session('uname') && session('Status')=='A'){
+	   		return view('masters.insuarance.inscompany');	
+	   	}
+	   	else{
+
+	   		return view('login.login');  
+	   	}		
+    }
+#================================================================================================ 
+	function new_insuarance_company(Request $req) {
+    	$user=session('epf');	
+		$data=$req->input();
+
+		$ins= Mnrce_admin_ins_company::where('rn',$data['rn'])
+			  									 ->count();
+			   
+		if($ins>0) {
+		$req->session()->put('inscompE','Insurance Company Already Exists!!!');
+		return redirect('/inscomp');			
+		}
+
+		else {	   
+			$Local = new Mnrce_admin_ins_company;
+			
+			$Local->rn=$data['rn'];
+			$Local->pn=$data['pn'];
+			$Local->comname=$data['name'];
+			//$Local->val=$data['val'];
+			$Local->conp=$data['cp'];
+			$Local->conpno=$data['cpm'];
+			$Local->cntact_no=$data['tel'];
+			$Local->email=$data['email'];
+			$Local->address=$data['add'];
+			$Local->crby=$user;
+			$Local->luby=$user;
+			$Local->save();
+				
+			$req->session()->put('inscomp','Successfully Saved Insurance Company !!!');
+			return back();				
+		}
+				
+	}
+#
+}
